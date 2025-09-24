@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Artist Portfolio</title>
+  <style>
+    /* General styles */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: url("images/bg.webp") no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      text-align: center;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Glassmorphism reusable style */
+    .glass {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    header {
+      padding: 20px;
+      margin: 10px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    header p {
+      margin: 5px 0 0;
+    }
+
+    /* Gallery Grid */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 40px;
+      z-index: 2;
+      position: relative;
+    }
+
+    /* Uniform thumbnails */
+    .gallery img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+    }
+    .lightbox img {
+      max-height: 80%;
+      max-width: 50%;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(255,255,255,0.3);
+      object-fit: contain;
+    }
+    .lightbox.active {
+      display: flex;
+    }
+
+    /* Footer */
+    footer {
+      padding: 15px;
+      margin: 10px;
+    }
+    footer a {
+      color: #4fc3f7;
+      text-decoration: none;
+    }
+
+    /* Raindrops */
+    .raindrop {
+      position: fixed;
+      top: -20px;
+      width: 2px;
+      height: 15px;
+      background: rgba(255, 255, 255, 0.7);
+      animation: fall linear forwards;
+      z-index: 1;
+      pointer-events: none;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(110vh); /* ensures it falls off screen */
+        opacity: 0.5;
+      }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+      .gallery {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 15px;
+        padding: 20px;
+      }
+      .gallery img {
+        height: 150px;
+      }
+      .lightbox img {
+        max-width: 90%;
+        max-height: 80%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header h1 {
+        font-size: 1.5rem;
+      }
+      .gallery img {
+        height: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="glass">
+    <h1>Artist Name</h1>
+    <p>Welcome to my art showcase 🌙</p>
+  </header>
+
+  <!-- GALLERY -->
+  <section class="gallery">
+    <img src="images/i1.webp" alt="Art 1" onclick="openLightbox(this)">
+    <img src="images/i2.webp" alt="Art 2" onclick="openLightbox(this)">
+    <img src="images/i3.webp" alt="Art 3" onclick="openLightbox(this)">
+    <img src="images/i4.webp" alt="Art 4" onclick="openLightbox(this)">
+    <img src="images/i5.webp" alt="Art 5" onclick="openLightbox(this)">
+    <img src="images/i6.webp" alt="Art 6" onclick="openLightbox(this)">
+    <img src="images/i7.webp" alt="Art 7" onclick="openLightbox(this)">
+    <img src="images/i8.webp" alt="Art 8" onclick="openLightbox(this)">
+    <img src="images/i10.webp" alt="Art 9" onclick="openLightbox(this)">
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" class="lightbox" onclick="closeLightbox(event)">
+    <img id="lightbox-img" src="" alt="Artwork Preview">
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="glass">
+    <p>Follow me on <a href="https://instagram.com/yourhandle">Instagram</a></p>
+  </footer>
+
+  <!-- RAIN SCRIPT -->
+  <script>
+    // Lightbox functions
+    function openLightbox(img) {
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightbox-img");
+      lightboxImg.src = img.src;
+      lightbox.classList.add("active");
+    }
+
+    function closeLightbox(event) {
+      if (event.target.id === "lightbox") {
+        document.getElementById("lightbox").classList.remove("active");
+      }
+    }
+
+    // Raindrops animation
+    function createRaindrop() {
+      const drop = document.createElement("div");
+      drop.classList.add("raindrop");
+      drop.style.left = Math.random() * window.innerWidth + "px";
+      drop.style.animationDuration = (0.8 + Math.random() * 1.5) + "s";
+      document.body.appendChild(drop);
+
+      setTimeout(() => {
+        drop.remove();
+      }, 3000); // ensure it's removed after falling off
+    }
+
+    setInterval(createRaindrop, 120);
+  </script>
+</body>
+</html>
